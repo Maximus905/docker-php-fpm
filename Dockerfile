@@ -2,6 +2,7 @@ FROM php:7.2.10-fpm
 MAINTAINER dev@chialab.it
 
 ENV fpm_conf /usr/local/etc/php-fpm.d/www.conf
+ENV zz_docker_conf /usr/local/etc/php-fpm.d/zz-docker.conf
 
 # Install PHP extensions and PECL modules.
 RUN buildDeps=" \
@@ -22,7 +23,7 @@ RUN buildDeps=" \
         libpq-dev \
         libxml2-dev \
     " \
-    && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y $buildDeps $runtimeDeps \
+    && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y $buildDeps $runtimeDeps \
     && docker-php-ext-install -j$(nproc) bcmath bz2 calendar iconv intl mbstring mysqli opcache pdo_mysql pdo_pgsql pgsql soap zip \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
@@ -37,17 +38,19 @@ RUN buildDeps=" \
 
 # install xdebug
 RUN pecl install xdebug-2.6.1 \
-	&& docker-php-ext-enable xdebug 
+    && docker-php-ext-enable xdebug 
 
 # Install Composer.
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && ln -s $(composer config --global home) /root/composer
 
 # install tools
-RUN apt-get update && apt-get install -y procps htop \
-    && apt-get purge -y --auto-remove $buildDeps \
+RUN apt-get update && apt-get install --no-install-recommends -y procps htop \
+    && apt-get purge -y --auto-remove \
     && rm -r /var/lib/apt/lists/*
 
+#to use socket: fpm_listen=/var/run/php-fpm.sock (You can do it in compose file)
+#ARG fpm_listen=/var/run/php-fpm.sock
 ARG fpm_listen=127.0.0.1:900
 ARG user_UID=3000
 ARG user_NAME=www-user
@@ -58,13 +61,14 @@ RUN set -ex \
  && addgroup --system --gid $group_UID $group_NAME \
  && adduser --uid $user_UID --system --gid $group_UID $user_NAME
 RUN sed -i \
-            -e "s/^user = .*/user = $user_NAME/g" \
-            -e "s/^group = .*/group = $group_NAME/g" \
-            -e "s/^;listen.mode = 0660/listen.mode = 0666/g" \
-            -e "s/^;listen.owner = .*/listen.owner = $user_NAME/g" \
-            -e "s/^;listen.group = .*/listen.group = $group_NAME/g" \
-            -e "s/^listen = 127.0.0.1:9000/listen = $fpm_listen/g" \
-            $fpm_conf
+        -e "s/^user = .*/user = $user_NAME/g" \
+        -e "s/^group = .*/group = $group_NAME/g" \
+        -e "s/^;listen.mode = 0660/listen.mode = 0666/g" \
+        -e "s/^;listen.owner = .*/listen.owner = $user_NAME/g" \
+        -e "s/^;listen.group = .*/listen.group = $group_NAME/g" \
+        -e "s~^listen = 127.0.0.1:9000~listen = ${fpm_listen}~g" \
+        $fpm_conf \
+    && sed -i -e "/^listen/d" $zz_docker_conf
 
 ENV PATH $PATH:/root/composer/vendor/bin
 WORKDIR /var/www
