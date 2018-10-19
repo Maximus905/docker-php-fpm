@@ -1,8 +1,11 @@
 # PHP-FPM image
 ###based on php:7.2-fpm image(debian).
-###installed ps and htop
-###installed x-debug
-###installed modules(php -m output):
+Image is prepared to use socket instead TCP for fpm
+See docker-compose file to more info
+###were installed:
+* tools like ps and htop
+* x-debug for debugging
+* PHP modules(php -m output):
 ```php
 [PHP Modules]
 bcmath

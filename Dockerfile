@@ -29,6 +29,7 @@ RUN buildDeps=" \
     && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
     && docker-php-ext-install -j$(nproc) ldap \
     && docker-php-ext-install -j$(nproc) exif \
+    && docker-php-ext-install -j$(nproc) sockets \
     && pecl install memcached redis \
     && docker-php-ext-enable memcached.so redis.so \
     && apt-get purge -y --auto-remove $buildDeps \
@@ -47,21 +48,23 @@ RUN apt-get update && apt-get install -y procps htop \
     && apt-get purge -y --auto-remove $buildDeps \
     && rm -r /var/lib/apt/lists/*
 
-ENV fpm_user_UID 3000
-ENV fpm_user_NAME www-user
-ENV fpm_group_UID 3000
-ENV fpm_group_NAME www-user
+ARG fpm_listen=127.0.0.1:900
+ARG user_UID=3000
+ARG user_NAME=www-user
+ARG group_UID=3000
+ARG group_NAME=www-user
 
 RUN set -ex \
- && addgroup --system --gid ${fpm_group_UID} ${fpm_group_NAME} \
- && adduser --uid ${fpm_user_UID} --system --gid ${fpm_group_UID} ${fpm_user_NAME}
+ && addgroup --system --gid $group_UID $group_NAME \
+ && adduser --uid $user_UID --system --gid $group_UID $user_NAME
 RUN sed -i \
-            -e "s/^user = .*/user = ${fpm_user_NAME}/g" \
-            -e "s/^group = .*/group = ${fpm_group_NAME}/g" \
+            -e "s/^user = .*/user = $user_NAME/g" \
+            -e "s/^group = .*/group = $group_NAME/g" \
             -e "s/^;listen.mode = 0660/listen.mode = 0666/g" \
-            -e "s/^;listen.owner = .*/listen.owner = ${fpm_user_NAME}/g" \
-            -e "s/^;listen.group = .*/listen.group = ${fpm_group_NAME}/g" \
-            ${fpm_conf}
+            -e "s/^;listen.owner = .*/listen.owner = $user_NAME/g" \
+            -e "s/^;listen.group = .*/listen.group = $group_NAME/g" \
+            -e "s/^listen = 127.0.0.1:9000/listen = $fpm_listen/g" \
+            $fpm_conf
 
 ENV PATH $PATH:/root/composer/vendor/bin
 WORKDIR /var/www
