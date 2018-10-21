@@ -1,8 +1,7 @@
 # PHP-FPM image
 ### based on php:7.2-fpm image(debian).
 Image is prepared to use socket instead TCP for fpm
-See docker-compose file to more info
-### were installed:
+### appended packages and extensions:
 * tools like ps and htop
 * x-debug for debugging
 * PHP modules(php -m output):
