@@ -1,66 +1,8 @@
-# PHP-FPM image
-### based on php:7.2-fpm image(debian).
-Image is prepared to use socket instead TCP for fpm
-See docker-compose file to more info
-### were installed:
-* tools like ps and htop
-* x-debug for debugging
-* PHP modules(php -m output):
-``` php
-[PHP Modules]
-bcmath
-bz2
-calendar
-Core
-ctype
-curl
-date
-dom
-exif
-fileinfo
-filter
-ftp
-gd
-hash
-iconv
-intl
-json
-ldap
-libxml
-mbstring
-memcached
-mysqli
-mysqlnd
-openssl
-pcre
-PDO
-pdo_mysql
-pdo_pgsql
-pdo_sqlite
-pgsql
-Phar
-posix
-readline
-redis
-Reflection
-session
-SimpleXML
-soap
-sockets
-sodium
-SPL
-sqlite3
-standard
-tokenizer
-xdebug
-xml
-xmlreader
-xmlwriter
-Zend OPcache
-zip
-zlib
+# Repository for autobuilding PHP-FPM images
+### based on official php image(debian).
+There are two branches: 
+* php-fpm
+* php-fpm-socket
 
-[Zend Modules]
-Xdebug
-Zend OPcache
-```
+#### See README.md files in these branches for more details.
+### Enjoy!
