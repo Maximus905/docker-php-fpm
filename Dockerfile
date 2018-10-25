@@ -4,7 +4,13 @@ MAINTAINER karasev.dmitry@gmail.com
 ENV fpm_conf /usr/local/etc/php-fpm.d/www.conf
 ENV zz_docker_conf /usr/local/etc/php-fpm.d/zz-docker.conf
 ENV PHP_INI_SCAN_DIR "/usr/local/etc/php/custom.d:/usr/local/etc/php/conf.d"
-ENV ENV TZ=UTC
+ENV ENV TZ=Europe/Moscow
+ENV LISTEN_SOCKET ''
+ENV SOCKET_PATH /var/run/php-fpm.sock
+ENV SOCKET_USER_UID 3000
+ENV SOCKET_USER_NAME www-user
+ENV SOCKET_GROUP_UID 3000
+ENV SOCKET_GROUP_NAME www-user
 
 # Install PHP extensions and PECL modules.
 RUN buildDeps=" \
@@ -70,3 +76,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y procps htop zip
     && rm -r /var/lib/apt/lists/*
 
 WORKDIR /var/www
+
+# set custom entrypoint
+COPY custom-docker-entrypoint /usr/local/bin/
+ENTRYPOINT ["custom-docker-entrypoint"]
+CMD ["php-fpm"]

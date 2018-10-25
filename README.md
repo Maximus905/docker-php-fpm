@@ -15,7 +15,28 @@ php:
       - ./conf/php/php.ini:/usr/local/etc/php/php.ini
       - ./conf/php/custom.d:/usr/local/etc/php/custom.d
 ```
-* PHP modules(php -m output):
+### PHP-FPM listener configuration:
+##### By default php-fpm listen TCP socket (port 9000).
+For changing listener to Unix socket pass set env variable LISTEN_SOCKET='yes'
+``` 
+docker container run --rm -d -e LISTEN_SOCKET=yes maximus905/php-fpm
+```
+In this case will be created system user and socket file:
+* ENV SOCKET_PATH /var/run/php-fpm.sock
+* ENV SOCKET_USER_UID 3000
+* ENV SOCKET_USER_NAME www-user
+* ENV SOCKET_GROUP_UID 3000
+* ENV SOCKET_GROUP_NAME www-user 
+
+Don't forget set properly web server configuration to use unix socket 
+
+### Timezone
+Default Timezone in container - ENV TZ=Europe/Moscow
+If you want to change - set env variable TZ 
+``` 
+docker container run --rm -d -e TZ=UTC maximus905/php-fpm
+```
+### PHP modules(php -m output):
 ``` php
 [PHP Modules]          
 bcmath                 
