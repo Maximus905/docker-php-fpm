@@ -28,7 +28,7 @@ In this case will be created system user and socket file:
 * ENV SOCKET_GROUP_UID 3000
 * ENV SOCKET_GROUP_NAME www-user 
 
-Don't forget set properly web server configuration to use unix socket 
+Don't forget to set properly web server configuration to use unix socket 
 
 ### Timezone
 Default Timezone in container - ENV TZ=Europe/Moscow
