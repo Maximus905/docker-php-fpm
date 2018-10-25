@@ -74,10 +74,11 @@ ENV PATH $PATH:/root/composer/vendor/bin
 RUN apt-get update && apt-get install --no-install-recommends -y procps htop zip unzip tzdata\
     && apt-get purge -y --auto-remove \
     && rm -r /var/lib/apt/lists/*
-
 WORKDIR /var/www
 
 # set custom entrypoint
-COPY custom-docker-entrypoint /usr/local/bin/
+COPY ./custom-docker-entrypoint /usr/local/bin/
+RUN chmod u+x /usr/local/bin/custom-docker-entrypoint
+
 ENTRYPOINT ["custom-docker-entrypoint"]
 CMD ["php-fpm"]
