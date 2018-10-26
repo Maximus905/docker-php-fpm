@@ -17,7 +17,7 @@ php:
 ```
 ### PHP-FPM listener configuration:
 ##### By default php-fpm listen TCP socket (port 9000).
-For changing listener to Unix socket pass set env variable LISTEN_SOCKET='yes'
+For changing listener to Unix socket pass env variable LISTEN_SOCKET='yes'
 ``` 
 docker container run --rm -d -e LISTEN_SOCKET=yes maximus905/php-fpm
 ```
