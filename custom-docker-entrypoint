@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
@@ -12,28 +12,31 @@ if [ -n "$LISTEN_SOCKET" ]; then
 	group=$(getent group $SOCKET_GROUP_NAME | cut -d: -f1)
 	groupId=$(getent group $SOCKET_GROUP_UID | cut -d: -f3)
 	
-	if [ -n "$userName" ]; then
+	if [ $userName == $SOCKET_USER_NAME -a $userId == $SOCKET_USER_UID ]; then
+		echo "User $SOCKET_USER_NAME (UID $SOCKET_USER_UID) already exists"
+	elif [ -n "$userName" ]; then
 		echo "Error! Can't create user $SOCKET_USER_NAME. User already exists"
 		exit 1
-	fi
-	
-	if [ -n "$userId" ]; then
+	elif [ -n "$userId" ]; then
 		echo "Error! Can't create user $SOCKET_USER_NAME. User ID $SOCKET_USER_UID already using"
 		exit 1
-	fi
-	if [ -n "$group" ]; then
-		echo "Error! Can't create group $SOCKET_GROUP_NAME. Group already exists"
-		exit 1
-	fi
-	
-	if [ -n "$groupId" ]; then
-		echo "Error! Can't create group $SOCKET_GROUP_NAME. Group ID $SOCKET_GROUP_UID already using"
-		exit 1
+	else
+		adduser --uid $SOCKET_USER_UID --system --no-create-home --gid $SOCKET_GROUP_UID $SOCKET_USER_NAME
 	fi
 
-	addgroup --gid $SOCKET_GROUP_UID $SOCKET_GROUP_NAME \
-	&& adduser --uid $SOCKET_USER_UID --system --no-create-home --gid $SOCKET_GROUP_UID $SOCKET_USER_NAME \
-	&& sed -i \
+	if [ $group == $SOCKET_GROUP_NAME -a $groupId == $SOCKET_GROUP_UID ]; then
+		echo "Group $SOCKET_GROUP_NAME (UID $SOCKET_GROUP_UID) already exists"
+	elif [ -n "$group" ]; then
+		echo "Error! Can't create group $SOCKET_GROUP_NAME. Group already exists"
+		exit 1
+	elif [ -n "$groupId" ]; then
+		echo "Error! Can't create group $SOCKET_GROUP_NAME. Group ID $SOCKET_GROUP_UID already using"
+		exit 1
+	else
+		addgroup --gid $SOCKET_GROUP_UID $SOCKET_GROUP_NAME
+	fi
+
+	sed -i \
         -e "s/^listen =/;listen =/g" \
         -e "s/^user = www-data/;user = www-data/g" \
         -e "s/^group = www-data/;group = www-data/g" \
