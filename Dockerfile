@@ -7,10 +7,10 @@ ENV PHP_INI_SCAN_DIR "/usr/local/etc/php/custom.d:/usr/local/etc/php/conf.d"
 ENV ENV TZ=Europe/Moscow
 ENV LISTEN_SOCKET ''
 ENV SOCKET_PATH /var/run/php-fpm.sock
-ENV SOCKET_USER_UID 3000
-ENV SOCKET_USER_NAME www-user
-ENV SOCKET_GROUP_UID 3000
-ENV SOCKET_GROUP_NAME www-user
+ENV SOCKET_USER_UID 33
+ENV SOCKET_USER_NAME www-data
+ENV SOCKET_GROUP_UID 33
+ENV SOCKET_GROUP_NAME www-data
 
 # Install PHP extensions and PECL modules.
 RUN buildDeps=" \
