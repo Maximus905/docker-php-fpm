@@ -23,10 +23,10 @@ docker container run --rm -d -e LISTEN_SOCKET=yes maximus905/php-fpm
 ```
 In this case will be created system user and socket file:
 * ENV SOCKET_PATH /var/run/php-fpm.sock
-* ENV SOCKET_USER_UID 3000
-* ENV SOCKET_USER_NAME www-user
-* ENV SOCKET_GROUP_UID 3000
-* ENV SOCKET_GROUP_NAME www-user 
+* ENV SOCKET_USER_UID 33
+* ENV SOCKET_USER_NAME www-data
+* ENV SOCKET_GROUP_UID 33
+* ENV SOCKET_GROUP_NAME www-data 
 
 Don't forget to set properly web server configuration to use unix socket 
 
