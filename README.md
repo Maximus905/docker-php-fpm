@@ -76,7 +76,8 @@ readline
 redis                  
 Reflection             
 session                
-SimpleXML              
+SimpleXML
+snmp              
 soap                   
 sockets                
 sodium                 
