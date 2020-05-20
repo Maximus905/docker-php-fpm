@@ -113,6 +113,7 @@ sockets
 sodium
 SPL
 sqlite3
+ssh2
 standard
 tokenizer
 xdebug
@@ -125,5 +126,5 @@ zlib
 
 [Zend Modules]
 Xdebug
-Zend OPcache        
+Zend OPcache      
 ```
