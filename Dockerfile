@@ -40,6 +40,7 @@ RUN buildDeps=" \
         tzdata \
         iputils-ping \
         dnsutils \
+        libssh2-1-dev \
     " \
     && sed -i /etc/apt/sources.list -e 's/$/ contrib non-free'/ \
     && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y $buildDeps $runtimeDeps \
@@ -84,6 +85,9 @@ RUN buildDeps=" \
     && git clone --branch $EXT_MONGODB_VERSION --depth 1 https://github.com/mongodb/mongo-php-driver.git /usr/src/php/ext/mongodb \
     && cd /usr/src/php/ext/mongodb && git submodule update --init \
     && docker-php-ext-install mongodb \
+    #ext-ssh2
+    && pecl install ssh2-1.1.2 \
+    && docker-php-ext-enable ssh2 \
     # clearing
     && docker-php-source delete \
     && apt-get purge -y --auto-remove $buildDeps \
@@ -93,8 +97,7 @@ RUN if [ "${http_proxy}" != "" ]; then \
         pear config-set http_proxy ${http_proxy} \
     ;fi \
     && pecl install xdebug-${XDEBUG_VERSION} \
-    && docker-php-ext-enable xdebug 
-
+    && docker-php-ext-enable xdebug
 # create directory for customer's .ini files
 RUN mkdir -p /usr/local/etc/php/custom.d
 
