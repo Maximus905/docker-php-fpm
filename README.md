@@ -1,8 +1,20 @@
-# PHP-FPM image
+# PHP-FPM image with installed Synfony CLI
 ### based on php:7.2-fpm image.
-### appended packages and extensions:
-* tools like ps, htop, zip, unzip
-* x-debug for debugging
+### get help for symfony CLI:
+* attach shell of php container
+* run 'symfony --help' or read official docs for symfony
+### env variables:
+* GIT_USER - set up git user for project (by default it's set to "Joe")
+* GIT_EMAIL - set up git email for project (by default it's set to "joe@mail.joe")
+### create new symfony project:
+* attach shell of php container
+* run 'symfony new PROJECT_NAME'
+### start symfony local web server:
+* attach shell of php container
+* run symfony serve
+* server will start and listen port 8000
+* on your brouser start localhost:8000
+* see more options in official documentation
 ### custom settings:
 * php.ini is made based on template files:
 * php.ini-development - for development mode

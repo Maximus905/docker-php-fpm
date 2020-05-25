@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -e
+
+#set up git initial
+git config --global user.email "$GIT_EMAIL"
+git config --global user.name "$GIT_USER"
+#create user _www for symfony web server
+addgroup --force-badname _www
+adduser --system --no-create-home --ingroup _www --disabled-login --force-badname _www
+# invoke parent entrypoint
+exec custom-docker-entrypoint "$@"
