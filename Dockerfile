@@ -4,7 +4,7 @@ LABEL maintainer=karasev.dmitry@gmail.com
 ENV GIT_USER "Joe"
 ENV GIT_EMAIL "joe@mail.joe"
 
-# Install Symfony
+# Install Symfony CLI
 RUN  wget https://get.symfony.com/cli/installer -O - | bash \
     && mv /root/.symfony/bin/symfony /usr/local/bin/symfony
 
