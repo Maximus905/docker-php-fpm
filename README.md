@@ -1,5 +1,5 @@
 # PHP-FPM image with installed Synfony CLI
-### based on php:7.2-fpm image.
+### based on maximus905/php-fpm:latest image.
 ### get help for symfony CLI:
 * attach shell of php container
 * run 'symfony --help' or read official docs for symfony
@@ -21,14 +21,14 @@
 * php.ini-production - for production mode
 * default choice is production mode, but you can change it by setting ENV variable DEVELOPMENT_MODE to any non empty value. For example:
 ```
-  docker container run --rm -d -e DEVELOPMENT_MODE=yes maximus905/php-fpm
+  docker container run --rm -d -e DEVELOPMENT_MODE=yes maximus905/symfony
 ```
 #### how to put custom .ini files:
 * custom .ini files are scanned in folder "/usr/local/etc/php/custom.d",
 so php.ini file and folder with all custom .ini files should be mounted in docker-compose file like this:
 ```
 php:
-    image: maximus905/php-fpm
+    image: maximus905/symfony
     volumes:
       - ./www:/var/www
       - ./conf/php/php.ini:/usr/local/etc/php/php.ini
@@ -38,7 +38,7 @@ php:
 ##### By default php-fpm listen TCP socket (port 9000).
 For changing listener to Unix socket pass env variable LISTEN_SOCKET=yes
 ``` 
-docker container run --rm -d -e LISTEN_SOCKET=yes maximus905/php-fpm
+docker container run --rm -d -e LISTEN_SOCKET=yes maximus905/symfony
 ```
 In this case will be created system user and socket file:
 * ENV SOCKET_PATH /var/run/php-fpm.sock
@@ -57,7 +57,7 @@ services:
       - ./conf/nginx/sites-enabled:/etc/nginx/conf.d
       - phpsocket:/var/run
   php:
-    image: maximus905/php-fpm
+    image: maximus905/symfony
     environment:
       - LISTEN_SOCKET=yes
       - DEVELOPMENT_MODE=yes
