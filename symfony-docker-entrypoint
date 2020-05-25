@@ -6,7 +6,13 @@ set -e
 git config --global user.email "$GIT_EMAIL"
 git config --global user.name "$GIT_USER"
 #create user _www for symfony web server
+user=$(getent passwd _www | cut -d: -f1)
+group=$(getent group _www | cut -d: -f1)
+if [ -z "$group" ]; then
 addgroup --force-badname _www
+fi
+if [ -z "$user" ]; then
 adduser --system --no-create-home --ingroup _www --disabled-login --force-badname _www
+fi
 # invoke parent entrypoint
 exec custom-docker-entrypoint "$@"
